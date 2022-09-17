@@ -33,7 +33,7 @@ export default function App() {
               {post.createdAt}
             </Text>
           </View>
-          <Entypo name="dots-three-horizontal" size={18} color="grey" style={styles.icon} />
+          <Entypo name="dots-three-horizontal" size={18} color="gray" style={styles.icon} />
         </View>
 
         {/* Body */}
@@ -56,8 +56,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  post: {
+    width: '100%'
+  },
+  header: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10
+  },
   profileImage: {
-    width: 50,
-    height: 50
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10
+  },
+  name: {
+    fontWeight: '500'
+  },
+  subtitle: {
+    color: 'gray'
+  },
+  icon: {
+    marginLeft: 'auto'
   }
 });
