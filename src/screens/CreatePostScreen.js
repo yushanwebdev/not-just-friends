@@ -1,5 +1,14 @@
 import { useState } from "react";
-import { Button, Image, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  Button,
+  Image,
+  KeyboardAvoidingView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const user = {
   id: "u1",
@@ -9,6 +18,7 @@ const user = {
 };
 
 const CreatePostScreen = () => {
+  const insets = useSafeAreaInsets();
   const [description, setDescription] = useState("");
 
   const onSubmit = () => {
@@ -17,25 +27,34 @@ const CreatePostScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Image
-          source={{
-            uri: user.image,
-          }}
-          style={styles.image}
-        />
-        <Text style={styles.name}>{user.name}</Text>
-      </View>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={[styles.container, { marginBottom: insets.bottom }]}
+      contentContainerStyle={{ flex: 1 }}
+    >
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Image
+            source={{
+              uri: user.image,
+            }}
+            style={styles.image}
+          />
+          <Text style={styles.name}>{user.name}</Text>
+        </View>
 
-      <TextInput
-        value={description}
-        onChangeText={setDescription}
-        placeholder="What is on your mind?"
-        multiline
-      />
-      <Button title="Post" onPress={onSubmit} />
-    </View>
+        <TextInput
+          value={description}
+          onChangeText={setDescription}
+          placeholder="What is on your mind?"
+          multiline
+        />
+
+        <View style={styles.buttonContainer}>
+          <Button title="Post" onPress={onSubmit} />
+        </View>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -61,6 +80,9 @@ const styles = StyleSheet.create({
   },
   name: {
     fontWeight: "500",
+  },
+  buttonContainer: {
+    marginTop: "auto",
   },
 });
 
