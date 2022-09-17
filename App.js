@@ -1,6 +1,11 @@
 import { StatusBar } from "expo-status-bar";
 import { Image, StyleSheet, Text, View } from "react-native";
-import { Entypo } from "@expo/vector-icons";
+import {
+  Entypo,
+  AntDesign,
+  FontAwesome5,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import LikeImage from "./assets/images/like.png";
 
 const post = {
@@ -57,12 +62,28 @@ export default function App() {
 
         {/* Footer */}
         <View style={styles.footer}>
+          {/* Stats Row */}
           <View style={styles.statsRow}>
             <Image source={LikeImage} style={styles.likeIcon} />
             <Text style={styles.likedBy}>
               Elon Musk and {post.numberOfLikes} others
             </Text>
             <Text style={styles.shares}>{post.numberOfShares} shares</Text>
+          </View>
+          {/* Buttons Row */}
+          <View style={styles.buttonsRow}>
+            <View style={styles.iconButton}>
+              <AntDesign name="like2" size={18} color="gray" />
+              <Text style={styles.iconButtonText}>Like</Text>
+            </View>
+            <View style={styles.iconButton}>
+              <FontAwesome5 name="comment-alt" size={18} color="gray" />
+              <Text style={styles.iconButtonText}>Like</Text>
+            </View>
+            <View style={styles.iconButton}>
+              <MaterialCommunityIcons name="share" size={18} color="gray" />
+              <Text style={styles.iconButtonText}>Like</Text>
+            </View>
           </View>
         </View>
       </View>
@@ -142,5 +163,21 @@ const styles = StyleSheet.create({
   shares: {
     marginLeft: "auto",
     color: "gray",
+  },
+
+  // Buttons Row
+  buttonsRow: {
+    marginVertical: 10,
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
+  iconButton: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  iconButtonText: {
+    marginLeft: 5,
+    color: "gray",
+    fontWeight: "500",
   },
 });
