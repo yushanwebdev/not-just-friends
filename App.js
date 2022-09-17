@@ -1,6 +1,6 @@
-import { StatusBar } from 'expo-status-bar';
-import { Image, StyleSheet, Text, View } from 'react-native';
-import { Entypo } from '@expo/vector-icons';
+import { StatusBar } from "expo-status-bar";
+import { Image, StyleSheet, Text, View } from "react-native";
+import { Entypo } from "@expo/vector-icons";
 
 const post = {
   id: "p1",
@@ -24,25 +24,39 @@ export default function App() {
       <View style={styles.post}>
         {/* Header */}
         <View style={styles.header}>
-          <Image source={{ uri: post.User.image }} style={styles.profileImage} />
+          <Image
+            source={{ uri: post.User.image }}
+            style={styles.profileImage}
+          />
           <View>
-            <Text style={styles.name}>
-              {post.User.name}
-            </Text>
-            <Text style={styles.subtitle}>
-              {post.createdAt}
-            </Text>
+            <Text style={styles.name}>{post.User.name}</Text>
+            <Text style={styles.subtitle}>{post.createdAt}</Text>
           </View>
-          <Entypo name="dots-three-horizontal" size={18} color="gray" style={styles.icon} />
+          <Entypo
+            name="dots-three-horizontal"
+            size={18}
+            color="gray"
+            style={styles.icon}
+          />
         </View>
 
         {/* Body */}
+        {post.description && (
+          <Text style={styles.description}>{post.description}</Text>
+        )}
+
+        {post.image && (
+          <Image
+            source={{
+              uri: post.image,
+            }}
+            style={styles.image}
+          />
+        )}
+
         {/* Footer */}
-        <View style={styles.footer}>
-
-        </View>
+        <View style={styles.footer}></View>
       </View>
-
 
       <StatusBar style="auto" />
     </View>
@@ -52,32 +66,48 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
   post: {
-    width: '100%'
+    width: "100%",
+    marginVertical: 10,
+    backgroundColor: "#fff",
   },
+
+  // Header
   header: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 10,
   },
   profileImage: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    marginRight: 10
+    marginRight: 10,
   },
   name: {
-    fontWeight: '500'
+    fontWeight: "500",
   },
   subtitle: {
-    color: 'gray'
+    color: "gray",
   },
   icon: {
-    marginLeft: 'auto'
-  }
+    marginLeft: "auto",
+  },
+
+  // Body
+  description: {
+    paddingHorizontal: 10,
+    lineHeight: 20,
+    letterSpacing: 0.3,
+  },
+  image: {
+    width: "100%",
+    aspectRatio: 1,
+    marginTop: 10,
+  },
 });
