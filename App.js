@@ -3,11 +3,15 @@ import { StyleSheet, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Navigation from "./src/navigation";
 import awsconfig from "./src/aws-exports";
-import { Amplify } from "aws-amplify";
+import { Amplify, Auth } from "aws-amplify";
+import { withAuthenticator } from "aws-amplify-react-native";
 
-Amplify.configure(awsconfig);
+Amplify.configure({
+  ...awsconfig,
+  Analytics: { disabled: true },
+});
 
-export default function App() {
+function App() {
   return (
     <SafeAreaProvider>
       <View style={styles.container}>
@@ -23,3 +27,5 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
+export default withAuthenticator(App);
