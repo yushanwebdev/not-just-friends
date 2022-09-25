@@ -18,6 +18,7 @@ import {
   Entypo,
 } from "@expo/vector-icons";
 import user from "../../assets/data/user.json";
+import { Auth } from "aws-amplify";
 
 const dummy_img =
   "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/user.png";
@@ -28,8 +29,8 @@ const profilePictureWidth = Dimensions.get("window").width * 0.4;
 const ProfileScreenHeader = ({ user, isMe = false }) => {
   const navigation = useNavigation();
 
-  const signOut = async () => {
-    console.warn("Sign out");
+  const signOut = () => {
+    Auth.signOut();
   };
 
   if (!user) {
