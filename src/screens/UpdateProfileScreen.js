@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -11,7 +11,8 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
-import { API, Auth, graphqlOperation } from "aws-amplify";
+import { API, Auth, DataStore, graphqlOperation } from "aws-amplify";
+import { User } from "../models";
 
 const dummy_img =
   "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/user.png";
@@ -34,6 +35,8 @@ const createUser = `
 const UpdateProfileScreen = () => {
   const [name, setName] = useState("");
   const [image, setImage] = useState(null);
+  const [user, setUser] = useState(null);
+
   const insets = useSafeAreaInsets();
 
   const pickImage = async () => {
@@ -65,6 +68,18 @@ const UpdateProfileScreen = () => {
     );
   };
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      const userData = await Auth.currentAuthenticatedUser();
+
+      const dbUser = await DataStore.query(User, userData.attributes.sub);
+      setUser(dbUser);
+      setName(dbUser.name);
+    };
+
+    fetchUser();
+  }, []);
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -73,7 +88,10 @@ const UpdateProfileScreen = () => {
       keyboardVerticalOffset={150}
     >
       <Pressable onPress={pickImage} style={styles.imagePickerContainer}>
-        <Image source={{ uri: image || dummy_img }} style={styles.image} />
+        <Image
+          source={{ uri: image || user?.image || dummy_img }}
+          style={styles.image}
+        />
         <Text>Change photo</Text>
       </Pressable>
 
