@@ -17,8 +17,10 @@ import {
   Ionicons,
   Entypo,
 } from "@expo/vector-icons";
-import user from "../../assets/data/user.json";
-import { Auth } from "aws-amplify";
+import { Auth, DataStore } from "aws-amplify";
+import { useEffect, useState } from "react";
+import { User } from "../models";
+import { Post } from "../models";
 
 const dummy_img =
   "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/user.png";
@@ -101,13 +103,24 @@ const ProfileScreenHeader = ({ user, isMe = false }) => {
 };
 
 const ProfileScreen = () => {
-  const route = useRoute();
+  const [user, setUser] = useState(null);
+  const [posts, setPosts] = useState([]);
 
-  console.warn("User: ", route?.params?.id);
+  const route = useRoute();
+  const userID = route?.params?.id;
+
+  useEffect(() => {
+    if (!userID) {
+      return;
+    }
+
+    DataStore.query(User, userID).then(setUser);
+    DataStore.query(Post, (p) => p.postUserId("eq", userID)).then(setPosts);
+  }, []);
 
   return (
     <FlatList
-      data={user.posts}
+      data={posts}
       renderItem={({ item }) => <FeedPost post={item} />}
       showsVerticalScrollIndicator={false}
       ListHeaderComponent={() => (
