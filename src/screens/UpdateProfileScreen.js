@@ -13,6 +13,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
 import { API, Auth, DataStore, graphqlOperation } from "aws-amplify";
 import { User } from "../models";
+import { useNavigation } from "@react-navigation/native";
 
 const dummy_img =
   "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/user.png";
@@ -33,6 +34,8 @@ const createUser = `
 `;
 
 const UpdateProfileScreen = () => {
+  const navigation = useNavigation();
+
   const [name, setName] = useState("");
   const [image, setImage] = useState(null);
   const [user, setUser] = useState(null);
@@ -52,7 +55,7 @@ const UpdateProfileScreen = () => {
     }
   };
 
-  const onSave = async () => {
+  const createUser = async () => {
     const userData = await Auth.currentAuthenticatedUser();
 
     const newUser = {
@@ -66,6 +69,26 @@ const UpdateProfileScreen = () => {
         input: newUser,
       })
     );
+  };
+
+  const updateUser = async () => {
+    await DataStore.save(
+      User.copyOf(user, (update) => {
+        update.name = name;
+      })
+    );
+  };
+
+  const onSave = async () => {
+    if (user) {
+      // update it
+      await updateUser();
+    } else {
+      // create it
+      await createUser();
+    }
+
+    navigation.goBack();
   };
 
   useEffect(() => {
