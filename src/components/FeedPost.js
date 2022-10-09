@@ -17,7 +17,7 @@ const FeedPost = ({ post }) => {
       <Pressable
         style={styles.header}
         onPress={() => {
-          navigation.navigate("Profile", { id: post.User?.id });
+          navigation.navigate("Profile", { id: post.postUserId });
         }}
       >
         <Image source={{ uri: post.User?.image }} style={styles.profileImage} />
