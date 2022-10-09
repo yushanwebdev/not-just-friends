@@ -11,9 +11,25 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
+import { API, Auth, graphqlOperation } from "aws-amplify";
 
 const dummy_img =
   "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/user.png";
+
+const createUser = `
+  mutation CreateUser($input: CreateUserInput!) {
+    createUser(input: $input) {
+      id
+      createdAt
+      updatedAt
+      name
+      image
+      _version
+      _lastChangedAt
+      _deleted
+    }
+  }
+`;
 
 const UpdateProfileScreen = () => {
   const [name, setName] = useState("");
@@ -34,7 +50,19 @@ const UpdateProfileScreen = () => {
   };
 
   const onSave = async () => {
-    console.warn("Saving the user profile");
+    const userData = await Auth.currentAuthenticatedUser();
+
+    const newUser = {
+      id: userData.attributes.sub,
+      name,
+      _version: 1,
+    };
+
+    await API.graphql(
+      graphqlOperation(createUser, {
+        input: newUser,
+      })
+    );
   };
 
   return (
