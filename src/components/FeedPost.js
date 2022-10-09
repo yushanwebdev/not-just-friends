@@ -8,6 +8,9 @@ import {
 import LikeImage from "../../assets/images/like.png";
 import { useNavigation } from "@react-navigation/native";
 
+const dummy_img =
+  "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/user.png";
+
 const FeedPost = ({ post }) => {
   const navigation = useNavigation();
 
@@ -20,7 +23,10 @@ const FeedPost = ({ post }) => {
           navigation.navigate("Profile", { id: post.postUserId });
         }}
       >
-        <Image source={{ uri: post.User?.image }} style={styles.profileImage} />
+        <Image
+          source={{ uri: post.User?.image || dummy_img }}
+          style={styles.profileImage}
+        />
         <View>
           <Text style={styles.name}>{post.User?.name}</Text>
           <Text style={styles.subtitle}>{post.createdAt}</Text>
