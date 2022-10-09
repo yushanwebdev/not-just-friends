@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Image,
@@ -13,7 +13,7 @@ import { Entypo } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
 import { Post } from "../models";
-import { Auth, DataStore } from "aws-amplify";
+import { Auth, DataStore, Storage } from "aws-amplify";
 
 const user = {
   id: "u1",
@@ -28,19 +28,39 @@ const CreatePostScreen = () => {
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
 
+  const uploadFile = async (fileUri) => {
+    try {
+      const response = await fetch(fileUri);
+
+      const blob = await response.blob();
+
+      const key = "yourKeyHere20.jpg";
+      await Storage.put(key, blob, {
+        contentType: "image/jpeg",
+      });
+
+      return key;
+    } catch (error) {
+      console.log("Error uploading file:", error);
+    }
+  };
+
   const onSubmit = async () => {
     const userData = await Auth.currentAuthenticatedUser();
 
-    const newPost = new Post({
+    const newPost = {
       description,
-      // image,
       numberOfLikes: 0,
       numberOfShares: 0,
       postUserId: userData.attributes.sub,
       _version: 1,
-    });
+    };
 
-    await DataStore.save(newPost);
+    if (image) {
+      newPost.image = await uploadFile(image);
+    }
+
+    await DataStore.save(new Post(newPost));
 
     setDescription("");
 
