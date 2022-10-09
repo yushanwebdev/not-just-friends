@@ -114,7 +114,7 @@ const ProfileScreen = () => {
   useEffect(() => {
     const fetchUser = async () => {
       const userData = await Auth.currentAuthenticatedUser();
-      const userID = route?.params?.id || userData;
+      const userID = route?.params?.id || userData.attributes.sub;
 
       if (!userID) {
         return;
@@ -132,6 +132,7 @@ const ProfileScreen = () => {
         }
       }
 
+      setUser(dbUser);
       DataStore.query(Post, (p) => p.postUserId("eq", userID)).then(setPosts);
     };
 
