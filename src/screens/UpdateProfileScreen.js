@@ -55,7 +55,7 @@ const UpdateProfileScreen = () => {
     }
   };
 
-  const createUser = async () => {
+  const addUser = async () => {
     const userData = await Auth.currentAuthenticatedUser();
 
     const newUser = {
@@ -85,7 +85,7 @@ const UpdateProfileScreen = () => {
       await updateUser();
     } else {
       // create it
-      await createUser();
+      await addUser();
     }
 
     navigation.goBack();
@@ -96,8 +96,11 @@ const UpdateProfileScreen = () => {
       const userData = await Auth.currentAuthenticatedUser();
 
       const dbUser = await DataStore.query(User, userData.attributes.sub);
-      setUser(dbUser);
-      setName(dbUser.name);
+
+      if (dbUser) {
+        setUser(dbUser);
+        setName(dbUser.name);
+      }
     };
 
     fetchUser();
