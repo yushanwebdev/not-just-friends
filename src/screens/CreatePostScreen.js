@@ -14,6 +14,8 @@ import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
 import { Post } from "../models";
 import { Auth, DataStore, Storage } from "aws-amplify";
+import "react-native-get-random-values";
+import { v4 as uuidV4 } from "uuid";
 
 const user = {
   id: "u1",
@@ -34,7 +36,7 @@ const CreatePostScreen = () => {
 
       const blob = await response.blob();
 
-      const key = "yourKeyHere20.jpg";
+      const key = `${uuidV4()}.jpg`;
       await Storage.put(key, blob, {
         contentType: "image/jpeg",
       });
