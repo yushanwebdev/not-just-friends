@@ -5,17 +5,25 @@ import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { DataStore, Predicates, SortDirection } from "aws-amplify";
 import { Post } from "../models";
+import { useUserContext } from "../contexts/UserContext";
 
 const img =
   "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/user.png";
 
 const FeedScreen = () => {
+  const { user } = useUserContext();
   const [posts, setPosts] = useState([]);
   const navigation = useNavigation();
 
   const createPost = () => {
     navigation.navigate("Create Post");
   };
+
+  useEffect(() => {
+    if (user === null) {
+      navigation.navigate("Update Profile");
+    }
+  }, [user]);
 
   useEffect(() => {
     const subscription = DataStore.observeQuery(Post, Predicates.ALL, {

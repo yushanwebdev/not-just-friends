@@ -13,7 +13,7 @@ const UserContextProvider = ({ children }) => {
     const dbUser = await DataStore.query(User, authUser.attributes.sub);
 
     setSub(authUser.attributes.sub);
-    setUser(dbUser);
+    setUser(dbUser ?? null);
   };
 
   useEffect(() => {
