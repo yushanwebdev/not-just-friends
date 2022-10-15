@@ -38,12 +38,11 @@ const createUser = `
 `;
 
 const UpdateProfileScreen = () => {
-  const { sub, dbUser } = useUserContext();
+  const { sub, user } = useUserContext();
   const navigation = useNavigation();
 
   const [name, setName] = useState("");
   const [image, setImage] = useState(null);
-  const [user, setUser] = useState(null);
 
   const insets = useSafeAreaInsets();
 
@@ -61,21 +60,25 @@ const UpdateProfileScreen = () => {
   };
 
   const addUser = async () => {
-    const newUser = {
-      id: sub,
-      name,
-      _version: 1,
-    };
+    try {
+      const newUser = {
+        id: sub,
+        name,
+        _version: 1,
+      };
 
-    if (image) {
-      newUser.image = await uploadFile(image);
+      if (image) {
+        newUser.image = await uploadFile(image);
+      }
+
+      await API.graphql(
+        graphqlOperation(createUser, {
+          input: newUser,
+        })
+      );
+    } catch (error) {
+      console.log("error", error);
     }
-
-    await API.graphql(
-      graphqlOperation(createUser, {
-        input: newUser,
-      })
-    );
   };
 
   const updateUser = async () => {
@@ -123,15 +126,8 @@ const UpdateProfileScreen = () => {
   };
 
   useEffect(() => {
-    const fetchUser = async () => {
-      if (dbUser) {
-        setUser(dbUser);
-        setName(dbUser.name);
-      }
-    };
-
-    fetchUser();
-  }, []);
+    setName(user?.name ?? "");
+  }, [user]);
 
   let renderImage = <Image source={{ uri: dummy_img }} style={styles.image} />;
 
