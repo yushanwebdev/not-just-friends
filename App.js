@@ -3,8 +3,9 @@ import { StyleSheet, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Navigation from "./src/navigation";
 import awsconfig from "./src/aws-exports";
-import { Amplify, Auth } from "aws-amplify";
+import { Amplify } from "aws-amplify";
 import { withAuthenticator } from "aws-amplify-react-native";
+import { UserContextProvider } from "./src/contexts/UserContext";
 
 Amplify.configure({
   ...awsconfig,
@@ -15,7 +16,9 @@ function App() {
   return (
     <SafeAreaProvider>
       <View style={styles.container}>
-        <Navigation />
+        <UserContextProvider>
+          <Navigation />
+        </UserContextProvider>
         <StatusBar style="auto" />
       </View>
     </SafeAreaProvider>

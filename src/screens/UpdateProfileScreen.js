@@ -17,6 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 import "react-native-get-random-values";
 import { v4 as uuidV4 } from "uuid";
 import { S3Image } from "aws-amplify-react-native/dist/Storage";
+import { useUserContext } from "../contexts/UserContext";
 
 const dummy_img =
   "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/user.png";
@@ -37,6 +38,7 @@ const createUser = `
 `;
 
 const UpdateProfileScreen = () => {
+  const { sub, dbUser } = useUserContext();
   const navigation = useNavigation();
 
   const [name, setName] = useState("");
@@ -59,10 +61,8 @@ const UpdateProfileScreen = () => {
   };
 
   const addUser = async () => {
-    const userData = await Auth.currentAuthenticatedUser();
-
     const newUser = {
-      id: userData.attributes.sub,
+      id: sub,
       name,
       _version: 1,
     };
@@ -124,10 +124,6 @@ const UpdateProfileScreen = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const userData = await Auth.currentAuthenticatedUser();
-
-      const dbUser = await DataStore.query(User, userData.attributes.sub);
-
       if (dbUser) {
         setUser(dbUser);
         setName(dbUser.name);

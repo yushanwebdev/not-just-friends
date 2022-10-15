@@ -20,9 +20,9 @@ import {
 } from "@expo/vector-icons";
 import { Auth, DataStore } from "aws-amplify";
 import { useEffect, useState } from "react";
-import { User } from "../models";
 import { Post } from "../models";
 import { S3Image } from "aws-amplify-react-native/dist/Storage";
+import { useUserContext } from "../contexts/UserContext";
 
 const dummy_img =
   "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/user.png";
@@ -109,27 +109,24 @@ const ProfileScreenHeader = ({ user, isMe = false }) => {
 };
 
 const ProfileScreen = () => {
+  const { sub, user } = useUserContext();
   const navigation = useNavigation();
 
-  const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
 
   const route = useRoute();
 
   useEffect(() => {
     const fetchUser = async () => {
-      const userData = await Auth.currentAuthenticatedUser();
-      const userID = route?.params?.id || userData.attributes.sub;
+      const userID = route?.params?.id || sub;
 
       if (!userID) {
         return;
       }
 
-      const isMe = userID === userData.attributes.sub;
+      const isMe = userID === sub;
 
-      const dbUser = await DataStore.query(User, userID);
-
-      if (!dbUser) {
+      if (!user) {
         if (isMe) {
           navigation.navigate("Update Profile");
         } else {
@@ -137,7 +134,6 @@ const ProfileScreen = () => {
         }
       }
 
-      setUser(dbUser);
       DataStore.query(Post, (p) => p.postUserId("eq", userID)).then(setPosts);
     };
 

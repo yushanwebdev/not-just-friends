@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Button,
   Image,
@@ -16,6 +16,7 @@ import { Post } from "../models";
 import { Auth, DataStore, Storage } from "aws-amplify";
 import "react-native-get-random-values";
 import { v4 as uuidV4 } from "uuid";
+import { useUserContext } from "../contexts/UserContext";
 
 const user = {
   id: "u1",
@@ -25,6 +26,7 @@ const user = {
 };
 
 const CreatePostScreen = () => {
+  const { sub } = useUserContext();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const [description, setDescription] = useState("");
@@ -48,13 +50,11 @@ const CreatePostScreen = () => {
   };
 
   const onSubmit = async () => {
-    const userData = await Auth.currentAuthenticatedUser();
-
     const newPost = {
       description,
       numberOfLikes: 0,
       numberOfShares: 0,
-      postUserId: userData.attributes.sub,
+      postUserId: sub,
       _version: 1,
     };
 
@@ -76,8 +76,6 @@ const CreatePostScreen = () => {
       aspect: [4, 3],
       quality: 1,
     });
-
-    console.log(result);
 
     if (!result.cancelled) {
       setImage(result.uri);
