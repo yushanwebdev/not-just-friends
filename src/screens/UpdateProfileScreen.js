@@ -16,6 +16,7 @@ import { User } from "../models";
 import { useNavigation } from "@react-navigation/native";
 import "react-native-get-random-values";
 import { v4 as uuidV4 } from "uuid";
+import { S3Image } from "aws-amplify-react-native/dist/Storage";
 
 const dummy_img =
   "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/user.png";
@@ -136,6 +137,14 @@ const UpdateProfileScreen = () => {
     fetchUser();
   }, []);
 
+  let renderImage = <Image source={{ uri: dummy_img }} style={styles.image} />;
+
+  if (image) {
+    renderImage = <Image source={{ uri: image }} style={styles.image} />;
+  } else if (user?.image) {
+    renderImage = <S3Image imgKey={user.image} style={styles.image} />;
+  }
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -144,10 +153,7 @@ const UpdateProfileScreen = () => {
       keyboardVerticalOffset={150}
     >
       <Pressable onPress={pickImage} style={styles.imagePickerContainer}>
-        <Image
-          source={{ uri: image || user?.image || dummy_img }}
-          style={styles.image}
-        />
+        {renderImage}
         <Text>Change photo</Text>
       </Pressable>
 
