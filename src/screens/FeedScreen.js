@@ -18,7 +18,11 @@ const FeedScreen = () => {
   };
 
   useEffect(() => {
-    DataStore.query(Post).then(setPosts);
+    const subscription = DataStore.observeQuery(Post).subscribe(({ items }) =>
+      setPosts(items)
+    );
+
+    return () => subscription.unsubscribe();
   }, []);
 
   return (
