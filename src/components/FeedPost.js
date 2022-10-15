@@ -7,6 +7,7 @@ import {
 } from "@expo/vector-icons";
 import LikeImage from "../../assets/images/like.png";
 import { useNavigation } from "@react-navigation/native";
+import { S3Image } from "aws-amplify-react-native/dist/Storage";
 
 const dummy_img =
   "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/user.png";
@@ -44,14 +45,7 @@ const FeedPost = ({ post }) => {
         <Text style={styles.description}>{post.description}</Text>
       )}
 
-      {post.image && (
-        <Image
-          source={{
-            uri: post.image,
-          }}
-          style={styles.image}
-        />
-      )}
+      {post.image && <S3Image imgKey={post.image} style={styles.image} />}
 
       {/* Footer */}
       <View style={styles.footer}>
