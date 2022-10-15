@@ -3,7 +3,7 @@ import FeedPost from "../components/FeedPost";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { DataStore } from "aws-amplify";
+import { DataStore, Predicates, SortDirection } from "aws-amplify";
 import { Post } from "../models";
 
 const img =
@@ -18,9 +18,9 @@ const FeedScreen = () => {
   };
 
   useEffect(() => {
-    const subscription = DataStore.observeQuery(Post).subscribe(({ items }) =>
-      setPosts(items)
-    );
+    const subscription = DataStore.observeQuery(Post, Predicates.ALL, {
+      sort: (s) => s.createdAt(SortDirection.DESCENDING),
+    }).subscribe(({ items }) => setPosts(items));
 
     return () => subscription.unsubscribe();
   }, []);
